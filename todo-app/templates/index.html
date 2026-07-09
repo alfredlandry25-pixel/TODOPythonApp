@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flask To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <main class="container">
+      <h1>To-Do List</h1>
+
+      <form class="add-form" action="{{ url_for('add_task') }}" method="post">
+        <label for="title">New task</label>
+        <div class="form-row">
+          <input id="title" name="title" type="text" placeholder="Example: Learn Flask routes" required>
+          <button type="submit">Add</button>
+        </div>
+      </form>
+
+      {% if tasks %}
+        <ul class="task-list">
+          {% for task in tasks %}
+            <li class="task-item {% if task.complete %}complete{% endif %}">
+              <span class="task-title">{{ task.title }}</span>
+
+              <div class="task-actions">
+                <form action="{{ url_for('toggle_task', task_id=task.id) }}" method="post">
+                  <button type="submit">
+                    {% if task.complete %}
+                      Mark incomplete
+                    {% else %}
+                      Mark complete
+                    {% endif %}
+                  </button>
+                </form>
+
+                <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post">
+                  <button class="danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty-message">No tasks yet. Add your first one above.</p>
+      {% endif %}
+    </main>
+  </body>
+</html>
